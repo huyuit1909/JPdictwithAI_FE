@@ -1,0 +1,178 @@
+.vocabulary-list-container {
+  max-width: 1000px;
+  max-height: 800px; /* Chiều cao tối đa của container */
+  overflow-y: auto;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(to left, #ffffff, #fceff9);
+}
+
+.vocabulary-list-container h2 {
+  position: sticky; /* Cố định vị trí của tiêu đề */
+  font-size: 2em;
+  font-weight: bold;
+  top: 0; /* Gắn ở phía trên của container */
+  background-color: #ffffff; /* Màu nền cho tiêu đề để không bị che bởi nội dung */
+  z-index: 10; /* Đảm bảo tiêu đề nằm trên các phần khác */
+  padding: 10px;
+  margin: 0; /* Loại bỏ margin mặc định */
+  border-bottom: 1px solid #ddd; /* Tạo đường kẻ dưới tiêu đề */
+}
+
+h2 {
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  color: #e91e63;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: #d9534f;
+  text-align: center;
+}
+
+.success {
+  color: #5cb85c;
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.vocabulary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s ease;
+}
+
+.vocabulary-item:hover {
+  background-color: #f9f9f9;
+}
+
+.word-content {
+  flex: 1;
+}
+
+.word-title {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.word-meaning {
+  margin-top: 5px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Popup overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Popup container */
+.popup-container {
+  position: relative;
+  width: 90%;
+  max-width: 428px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column; /* Sắp xếp các thành phần theo chiều dọc */
+  padding: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+  max-height: 80%;
+}
+
+/* Popup header */
+.popup-header {
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #e91e63;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #e91e63;
+  padding-bottom: 10px;
+}
+
+/* Popup content */
+.popup-content {
+  flex-grow: 1; /* Mở rộng nội dung linh hoạt */
+  overflow-y: auto;
+  padding: 15px;
+  color: #555;
+  font-size: 1em;
+  line-height: 1.6;
+}
+
+/* Các tiêu đề */
+.popup-content h3 {
+  text-align: center; /* Canh giữa tiêu đề */
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #e91e63;
+}
+
+/* Nội dung khác canh trái */
+.popup-content p,
+.popup-content ul {
+  text-align: left;
+  margin: 10px 0;
+}
+
+/* Popup footer và nút close */
+.popup-footer {
+  display: flex;
+  justify-content: flex-end; /* Căn phải cho nút */
+  margin-top: 15px;
+}
+
+.popup-close-btn {
+  background-color: #e91e63;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.popup-close-btn:hover {
+  background-color: #d9534f;
+  transform: scale(1.05);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

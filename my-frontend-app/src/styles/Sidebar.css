@@ -1,0 +1,126 @@
+/* Sidebar container */
+.sidebar {
+  width: 240px;
+  padding: 80px 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.08);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 1;
+  transition: all 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to left, #ffffff, #fceff9);
+}
+
+.content {
+  margin-left: 260px;
+  padding: 40px 60px;
+  width: calc(100% - 260px);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 1em;
+  font-weight: bold;
+  color: #e91e63;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px;
+  background: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0px 2px 8px rgba(255, 77, 77, 0.15);
+  margin-bottom: 5px; /* Thêm khoảng cách giữa các mục */
+
+}
+
+.section-title:hover {
+  background-color: rgba(233, 30, 99, 0.2);
+  color: #e91e63;
+}
+
+/* Arrow icon with rotation */
+.arrow-icon {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.section-title:hover .arrow-icon {
+  transform: rotate(90deg); /* Mũi tên quay ngang khi hover */
+}
+
+/* Sidebar items */
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 0.95em;
+  color: #333;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  margin-bottom: 5px; /* Thêm khoảng cách giữa các mục */
+
+}
+
+.sidebar li.selected {
+  background-color:#e91e63;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0px 2px 12px rgba(255, 77, 77, 0.3);
+}
+.sidebar li.selected .icon{
+  color: #fff;
+  }
+
+.sidebar li:hover {
+  background-color: rgba(246, 172, 197, 0.2);
+  color: #e91e63  ;
+}
+
+/* Sub-menu with indentation */
+.sub-menu {
+  padding-left: 15px;
+  margin-top: 8px;
+}
+
+/* Icon styles */
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  color: #ff1a1a;
+  transition: color 0.3s ease;
+}
+
+.sidebar li:hover .icon {
+  color: #ff1a1a;
+}
+
+/* Sub-menu items */
+.sub-menu-item {
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.sub-menu-item.selected,
+.sub-menu-item:hover {
+  background: #fce4ec;
+  color: #e91e63;
+}

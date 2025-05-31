@@ -1,0 +1,188 @@
+/* General Container Styles */
+.learning-board-container {
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.board-columns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Column Styles */
+.column {
+  flex: 1;
+  min-width: 300px;
+  height: 800px; /* Fixed height */
+  border-radius: 8px;
+  padding: 10px;
+  overflow-y: auto; /* Scrollable content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Column Backgrounds */
+.column:nth-child(1) {
+  background-color: #fde2e4; /* Pastel Pink */
+}
+
+.column:nth-child(2) {
+  background-color: #dfe7fd; /* Pastel Blue */
+}
+
+.column:nth-child(3) {
+  background-color: #f9f7d9; /* Pastel Yellow */
+}
+
+.column:nth-child(4) {
+  background-color: #e2f0cb; /* Pastel Green */
+}
+
+/* Column Header */
+.column-header {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: inherit;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Word Item Styles */
+.word-item {
+  background: #ffffff;
+  color: #333333;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.word-item:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+}
+
+.word-item:hover {
+  background-color: #e3f2fd; /* Light Blue Hover Effect */
+}
+
+.word-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Empty Column Placeholder */
+.empty-column {
+  text-align: center;
+  color: #aaa;
+  padding: 16px;
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* Unified Button Styles */
+.button {
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: #fff;
+  background: linear-gradient(90deg, #4d4dff, #1a1aff);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background: linear-gradient(90deg, #6a6aff, #3333ff);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Unified Popup Styles */
+.popup-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+}
+
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-header {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.popup-content h4 {
+  margin-top: 15px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.popup-footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.close-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #d32f2f;
+}
+
+/* User Guide Styles */
+.user-guide {
+  background: linear-gradient(to left, #fffff6, #ffe6e6);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

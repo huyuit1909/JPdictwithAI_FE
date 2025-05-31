@@ -1,0 +1,313 @@
+/* SearchWord Container */
+.search-word-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to left, #ffffff, #fceff9);
+}
+
+.search-word-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #e91e63;
+  margin-bottom: 20px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-word-container h2:hover {
+  color: #e91e63;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  padding-left: 10px !important;
+}
+
+input:focus {
+  border-color: #ff4d4d;
+  outline: none;
+}
+
+/* Button Styles */
+.button-search {
+  display: inline-block;
+  width: 100%;
+  background-color: #e91e63;
+  color: #fff;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.07rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex: 2;
+}
+
+.button-search:hover {
+  background-color: #c2185b;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Error Message */
+.error-message {
+  color: #d9534f;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Result Section */
+.result {
+  margin-top: 30px;
+  padding: 24px;
+  background-color: #fff0f5;
+  border: 1px solid #f8bbd0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+}
+
+.result h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  text-align: center;
+}
+
+.result-item {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.result-item strong {
+  color: #ff4d4d;
+  margin-right: 8px;
+}
+
+.result-item p {
+  margin: 5px 0;
+}
+
+.result-item ul {
+  margin: 10px 0 10px 20px;
+}
+
+.result-item li {
+  list-style: disc;
+}
+
+/* Loading Spinner */
+.loading {
+  text-align: center;
+  color: #ff4d4d;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+/* Button dấu cộng */
+.add-to-vocabulary {
+  background-color: #e91e63;
+  color: #ffffff !important;
+  font-size: 1.5em;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 1;
+}
+
+.add-to-vocabulary::before {
+  content: "+";
+  color: #ffffff !important;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.add-to-vocabulary:hover {
+  background-color: #c2185b;
+  transform: scale(1.15);
+  box-shadow: 0 6px 14px rgba(233, 30, 99, 0.45);
+}
+
+.add-to-vocabulary:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(233, 30, 99, 0.8);
+}
+
+/* Thông báo thành công */
+.success-message {
+  color: #28a745; /* Màu xanh lá */
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+  background-color: #e6f9ec; /* Màu nền nhẹ */
+  border: 1px solid #b2d8b2;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.1);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Animation hiệu ứng mờ dần */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .search-word-container {
+    padding: 15px;
+  }
+  .result-item {
+    font-size: 1rem;
+  }
+  .button-search, .add-to-vocabulary {
+    font-size: 0.9rem;
+  }
+}
+
+/* ComboBox Styles */
+select,
+.model-select {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%23333' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.model-select {
+  flex: 1;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 8px 12px;
+  font-size: 0.97rem;
+}
+
+select:focus,
+.model-select:focus {
+  border-color: #e91e63;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2);
+}
+
+/* Ensure parent container is not overridden elsewhere */
+.form-inline-group {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-inline-group select {
+  width: 100%;
+}
+
+.form-inline-group .button-search {
+  width: 100% !important;
+  display: block;
+}
+
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.model-select,
+.button-search {
+  height: 42px;           /* Đảm bảo cùng chiều cao */
+  padding: 0 16px;        /* Padding ngang cho nút và select */
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-bottom: 0;       /* Xóa margin dưới nếu có */
+}
+
+.button-search {
+  width: auto;            /* Không chiếm hết hàng */
+  min-width: 100px;
+  display: inline-block;  /* Đảm bảo nằm cùng hàng */
+  padding: 0 24px;
+}
+
+/* Xóa hoặc ghi đè các thuộc tính sau nếu có */
+.form-inline-group .button-search,
+.button-search {
+  width: auto !important;
+  display: inline-block !important;
+  margin-bottom: 0 !important;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .form-inline-group {
+    flex-direction: column;
+  }
+  .model-select,
+  .button-search {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 8px;
+  }
+}
