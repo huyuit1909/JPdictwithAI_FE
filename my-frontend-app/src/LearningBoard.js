@@ -30,10 +30,7 @@ const LearningBoard = () => {
       });
 
       // Lấy đúng mảng từ API
-      const wordArray =
-        Array.isArray(res.data)
-          ? res.data
-          : (res.data.words || res.data.list_word || []);
+      const wordArray = res.data.list_word || res.data.words || [];
 
       const wordsWithStatus = wordArray.map((word) => ({
         ...word,
@@ -144,7 +141,7 @@ const LearningBoard = () => {
     try {
       console.log('Sending API request - Update word', wordId, 'to status:', newStatus);
       
-      const response = await axios.put(`http://127.0.0.1:5001/update/${wordId}`, {
+      const response = await axios.put(`${API_URL}/update/${wordId}`, {
         status: newStatus
       });
 

@@ -24,12 +24,8 @@ const fetchWords = async () => {
         });
         console.log(axios.get(`${API_URL}/list`));
         console.log("API Response:", res.data);
-        // Đảm bảo luôn là mảng
-        setWords(
-          Array.isArray(res.data)
-            ? res.data
-            : (res.data.words || res.data.list_word || [])
-        );
+        // APIレスポンスからlist_wordを取得
+        setWords(res.data.list_word || res.data.words || []);
     } catch (err) {
         console.error('Error fetching words:', err);
         setError('Failed to fetch words. Please try again.');

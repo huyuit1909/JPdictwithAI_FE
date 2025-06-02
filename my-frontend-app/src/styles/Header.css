@@ -1,0 +1,75 @@
+/* src/styles/Header.css */
+.header {
+  position: fixed; /* Đặt header cố định ở trên cùng */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px; /* Đặt chiều cao cố định */
+  z-index: 100;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(233,30,99,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 50px;
+  border-bottom: 3px solid #e91e63; /* Viền đỏ phía dưới */
+}
+
+.logo-icon {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 144px !important;
+  height: 144px !important;
+  object-fit: contain;
+  pointer-events: none; /* Không cho click vào ảnh */
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(.4,2,.6,1);
+}
+
+.logo-image:hover {
+  transform: scale(1.08) rotate(-2deg);
+  filter: drop-shadow(0 4px 16px #e91e6388);
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Tạo khoảng cách đều giữa các nút */
+}
+
+.content {
+  padding-top: 0px; /* Căn chỉnh theo chiều cao của header */
+}
+
+.logo-image {
+  width: 70px; /* Tùy chỉnh kích thước của ảnh */
+  height: 70px;
+}
+
+.login-container {
+  margin: 0;
+  padding: 0;
+}
+
+.assistant-button {
+  padding: 12px 25px; /* Kích thước nút */
+  background: linear-gradient(90deg, #e91e63, #e46a93); /* Gradient màu xanh giống nút submit */
+  color: #fff; /* Màu chữ */
+  border: none; /* Xóa viền */
+  border-radius: 25px; /* Bo góc */
+  font-size: 1.1em; /* Kích thước chữ */
+  cursor: pointer; /* Con trỏ dạng bàn tay */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển đổi */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ */
+}
+
+.assistant-button:hover {
+  background: linear-gradient(90deg, #e91e63, #e46a93); /* Thay đổi màu khi hover */
+  transform: translateY(-2px); /* Nhấc nhẹ nút */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+}

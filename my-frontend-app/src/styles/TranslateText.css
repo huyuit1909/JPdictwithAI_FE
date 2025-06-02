@@ -1,0 +1,90 @@
+/* src/styles/TranslateText.css */
+
+.translate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80vw;
+  max-width: 1000px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(95deg, #fff, #fceff9 90%);
+  gap: 20px;
+  overflow: hidden;
+  margin-top: 100px;
+}
+
+.translate-section {
+  width: 100%;
+}
+
+.translate-section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e91e63;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.translate-section textarea {
+  width: 100%;
+  height: 180px;
+  padding: 15px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+.translate-section textarea:focus {
+  border-color: #e91e63; /* Viền đậm hơn khi focus */
+  outline: none;
+}
+
+/* Button Translate rõ hơn */
+.translate-button-section button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 30px;
+  font-size: 18px;
+  color: #e91e63; /* Màu chữ cam */
+  background-color: #fff; /* Nền trắng */
+  border: 2px solid #e91e63; /* Viền cam */
+  border-radius: 24px; /* Bo góc lớn để tạo hiệu ứng bầu */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 8px 16px rgba(255, 185, 222, 0.2); /* Hiệu ứng bóng đổ nhẹ */
+}
+
+.translate-button-section button:hover {
+  background-color: #e91e63; /* Nền cam đậm khi hover */
+  color: #fff; /* Chữ trắng khi hover */
+  transform: scale(1.05); /* Phóng to nhẹ khi hover */
+}
+
+.translate-icon {
+  font-size: 1.2em;
+}
+
+.translate-button-section button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.translate-icon {
+  font-size: 1.2em;
+}
+
+.select-row {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;}

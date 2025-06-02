@@ -9,6 +9,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   background: linear-gradient(to left, #ffffff, #fceff9);
+  margin-top: 100px;
 }
 
 .search-word-container h2 {
