@@ -6,103 +6,192 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 80px;
+  margin-left: 250px;
 }
 
+/* Title Styles */
+.learning-board-container h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #e91e63, #ff6090);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 8px rgba(233, 30, 99, 0.2);
+  padding: 0.5rem 2rem;
+  position: relative;
+}
+
+.learning-board-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(to right, #e91e63, #ff6090);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(233, 30, 99, 0.3);
+}
+
+/* --- カラム全体をガラス風・グラデーション・影強調 --- */
 .board-columns {
   display: flex;
-  gap: 16px;
+  gap: 32px;
   justify-content: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
+  margin-bottom: 40px;
 }
 
-/* Column Styles */
 .column {
   flex: 1;
-  min-width: 300px;
-  height: 800px; /* Fixed height */
-  border-radius: 8px;
-  padding: 10px;
-  overflow-y: auto; /* Scrollable content */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-width: 260px;
+  max-width: 320px;
+  height: 720px;
+  border-radius: 24px;
+  padding: 18px 12px 12px 12px;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(233,30,99,0.08);
+  position: relative;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
-
 .column:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 32px 0 rgba(233,30,99,0.18);
+  transform: translateY(-6px) scale(1.03);
 }
 
-/* Column Backgrounds */
-.column:nth-child(1) {
-  background-color: #fde2e4; /* Pastel Pink */
+/* カラムごとにグラデーションバー */
+.column::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 7px;
+  border-radius: 24px 24px 0 0;
+  z-index: 2;
 }
+.column:nth-child(1)::before { background: linear-gradient(90deg,#e91e63,#ff6090); }
+.column:nth-child(2)::before { background: linear-gradient(90deg,#2196f3,#6ec6ff); }
+.column:nth-child(3)::before { background: linear-gradient(90deg,#ffd600,#fffde4); }
+.column:nth-child(4)::before { background: linear-gradient(90deg,#43e97b,#38f9d7); }
 
-.column:nth-child(2) {
-  background-color: #dfe7fd; /* Pastel Blue */
-}
-
-.column:nth-child(3) {
-  background-color: #f9f7d9; /* Pastel Yellow */
-}
-
-.column:nth-child(4) {
-  background-color: #e2f0cb; /* Pastel Green */
-}
-
-/* Column Header */
+/* カラムヘッダー */
 .column-header {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #2c3e50;
-  font-size: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #222;
+  margin-bottom: 18px;
+  padding-top: 8px;
   position: sticky;
   top: 0;
-  z-index: 10;
-  background-color: inherit;
-  border-bottom: 1px solid #ddd;
+  background: rgba(255,255,255,0.7);
+  z-index: 3;
 }
 
-/* Word Item Styles */
+/* カラムごとにアイコン色 */
+.column-header .col-icon { font-size: 1.3em; }
+.column:nth-child(1) .col-icon { color: #e91e63; }
+.column:nth-child(2) .col-icon { color: #2196f3; }
+.column:nth-child(3) .col-icon { color: #ffd600; }
+.column:nth-child(4) .col-icon { color: #43e97b; }
+
+/* 単語カードをカード風に */
 .word-item {
-  background: #ffffff;
-  color: #333333;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  padding: 18px 10px;
+  margin-bottom: 14px;
+  border-radius: 14px;
   text-align: center;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1.08em;
+  font-weight: 600;
   cursor: grab;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  box-shadow: 0 2px 12px rgba(233,30,99,0.07);
+  border: 1.5px solid rgba(233,30,99,0.08);
+  transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
+  user-select: none;
+}
+
+/* ドラッグ中のスタイル（重要！） */
+.word-item[data-rbd-drag-handle-context-id] {
+  background: linear-gradient(135deg, #e91e63, #ff6090) !important;
+  color: white !important;
+  box-shadow: 0 8px 24px rgba(233,30,99,0.4) !important;
+  transform: rotate(5deg) scale(1.05) !important;
+  z-index: 1000 !important;
+  border: 2px solid #e91e63 !important;
+}
+
+/* ドラッグ中の要素（より具体的） */
+[data-rbd-draggable-context-id] .word-item {
+  background: linear-gradient(135deg, #e91e63, #ff6090) !important;
+  color: white !important;
+  box-shadow: 0 8px 24px rgba(233,30,99,0.4) !important;
+  transform: rotate(3deg) scale(1.08) !important;
+  z-index: 1000 !important;
+  border: 2px solid #e91e63 !important;
+  font-weight: 700 !important;
+}
+
+/* ドラッグ中の単語テキスト */
+[data-rbd-draggable-context-id] .word-text {
+  color: white !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+}
+
+/* Draggingクラス用スタイル */
+.word-item.dragging {
+  background: linear-gradient(135deg, #e91e63, #ff6090) !important;
+  color: white !important;
+  box-shadow: 0 12px 32px rgba(233,30,99,0.6) !important;
+  transform: rotate(5deg) scale(1.1) !important;
+  z-index: 1000 !important;
+  border: 2px solid #e91e63 !important;
+  font-weight: 700 !important;
+}
+
+.word-item.dragging .word-text {
+  color: white !important;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4) !important;
 }
 
 .word-item:active {
   cursor: grabbing;
-  transform: scale(1.05);
+  transform: scale(1.04);
+  box-shadow: 0 4px 18px rgba(233,30,99,0.18);
 }
-
 .word-item:hover {
-  background-color: #e3f2fd; /* Light Blue Hover Effect */
+  background: linear-gradient(90deg,#fce4ec,#e3f2fd 80%);
+  box-shadow: 0 6px 18px rgba(233,30,99,0.13);
 }
 
 .word-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 
-/* Empty Column Placeholder */
+/* 空カラム */
 .empty-column {
   text-align: center;
-  color: #aaa;
-  padding: 16px;
+  color: #bbb;
+  padding: 24px 0;
   font-style: italic;
-  font-size: 14px;
+  font-size: 1em;
 }
 
 /* Unified Button Styles */
@@ -185,4 +274,17 @@
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 900px) {
+  .board-columns {
+    flex-direction: column;
+    gap: 24px;
+    max-width: 98vw;
+  }
+  .column {
+    min-width: 0;
+    max-width: 100vw;
+    height: auto;
+  }
 }
