@@ -44,22 +44,22 @@ const Sidebar = () => {
         </li>
         <div className={`sub-menu ${expandVocabulary ? 'expanded' : ''}`}>
           <li
-            onClick={() => navigate('/search')}
-            className={`sub-menu-item ${isActive('/search') ? 'active' : ''}`}
+            onClick={() => navigate('/search-word')}
+            className={`sub-menu-item ${isActive('/search-word') ? 'active' : ''}`}
           >
             <FaSearch className="icon" />
             {!isCollapsed && <span>Search Word</span>}
           </li>
           <li
-            onClick={() => navigate('/vocabulary')}
-            className={`sub-menu-item ${isActive('/vocabulary') ? 'active' : ''}`}
+            onClick={() => navigate('/vocabulary-list')}
+            className={`sub-menu-item ${isActive('/vocabulary-list') ? 'active' : ''}`}
           >
             <FaBook className="icon" />
             {!isCollapsed && <span>Vocabulary List</span>}
           </li>
           <li
-            onClick={() => navigate('/learning')}
-            className={`sub-menu-item ${isActive('/learning') ? 'active' : ''}`}
+            onClick={() => navigate('/learning-board')}
+            className={`sub-menu-item ${isActive('/learning-board') ? 'active' : ''}`}
           >
             <FaChalkboardTeacher className="icon" />
             {!isCollapsed && <span>Learning Board</span>}
@@ -81,8 +81,8 @@ const Sidebar = () => {
         </li>
         <div className={`sub-menu ${expandTranslateText ? 'expanded' : ''}`}>
           <li
-            onClick={() => navigate('/translate')}
-            className={`sub-menu-item ${isActive('/translate') ? 'active' : ''}`}
+            onClick={() => navigate('/translate-text')}
+            className={`sub-menu-item ${isActive('/translate-text') ? 'active' : ''}`}
           >
             <FaAtlas className="icon" />
             {!isCollapsed && <span>Translate Text</span>}
