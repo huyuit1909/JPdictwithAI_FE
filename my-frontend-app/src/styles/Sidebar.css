@@ -153,7 +153,7 @@
   background: #fff;
   transition: background-color 0.3s ease, color 0.3s ease;
   box-shadow: 0px 2px 8px rgba(255, 77, 77, 0.15);
-  margin-bottom: 5px; /* Thêm khoảng cách giữa các mục */
+  margin-bottom: 5px;
 }
 
 .section-title:hover {
@@ -230,10 +230,15 @@
   padding: 10px 15px;
   border-radius: 4px;
   transition: background 0.3s ease, color 0.3s ease;
+  font-size: 0.95em;
 }
 
 .sub-menu-item.selected,
 .sub-menu-item:hover {
   background: #fce4ec;
   color: #e91e63;
+}
+
+.section-title span {
+  font-size: 0.7em !important;
 }
