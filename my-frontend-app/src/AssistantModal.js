@@ -115,7 +115,7 @@ const AssistantModal = ({ isOpen, onClose }) => {
             </IconButton>
 
             <Typography variant="h4" component="h2" className="modal-title">
-              文章アシスタント
+              例文作成支援
             </Typography>
             
             <div className="word-selection">
