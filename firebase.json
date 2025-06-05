@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "my-frontend-app/build",
+    "site": "[Firebase Consoleで作成したプロジェクトID]",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+} 

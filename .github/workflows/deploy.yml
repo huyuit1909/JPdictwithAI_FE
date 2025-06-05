@@ -1,0 +1,48 @@
+name: Deploy to Google Cloud
+
+on:
+  push:
+    branches:
+      - main  # メインブランチにプッシュされた時に実行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          CI: false  # CRAのビルド警告を無視
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Deploy to App Engine
+        run: |
+          echo "runtime: nodejs18" > app.yaml
+          echo "env: standard" >> app.yaml
+          echo "handlers:" >> app.yaml
+          echo "  - url: /(.*\..+)$" >> app.yaml
+          echo "    static_files: build/\\1" >> app.yaml
+          echo "    upload: build/(.*\..+)$" >> app.yaml
+          echo "  - url: /.*" >> app.yaml
+          echo "    static_files: build/index.html" >> app.yaml
+          echo "    upload: build/index.html" >> app.yaml
+          gcloud app deploy --quiet 
