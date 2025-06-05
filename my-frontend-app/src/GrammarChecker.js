@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Tooltip } from "@mui/material";
 import "./styles/AssistantModal.css";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const GrammarChecker = () => {
   const [inputText, setInputText] = useState("");
@@ -61,16 +66,47 @@ const GrammarChecker = () => {
     if (!result || !result.changes || !result.original_text) return null;
 
     const text = result.original_text;
-    let lastIndex = 0;
-    const elements = [];
+    let processedText = text;
+    let elements = [];
+    let lastProcessedIndex = 0;
+    let usedRanges = []; // 既にハイライトした範囲を記録
 
     // 修正箇所は既にソート済み（APIレスポンス処理時）
-    result.changes.forEach((change, index) => {
-      // 修正箇所の前のテキストを追加
-      if (change.orig_start > lastIndex) {
+    result.changes.forEach((change, changeIndex) => {
+      const oldText = change.old;
+      if (!oldText) return;
+
+      // 未処理のテキスト内で最初に一致する位置を検索
+      let startIndex = -1;
+      let currentSearchStart = 0;
+
+      while (currentSearchStart < processedText.length) {
+        const foundIndex = processedText.indexOf(oldText, currentSearchStart);
+        if (foundIndex === -1) break;
+
+        // この範囲が既にハイライト済みかチェック
+        const isOverlapping = usedRanges.some(([start, end]) => 
+          (foundIndex >= start && foundIndex < end) || 
+          (foundIndex + oldText.length > start && foundIndex + oldText.length <= end)
+        );
+
+        if (!isOverlapping) {
+          startIndex = foundIndex;
+          break;
+        }
+        currentSearchStart = foundIndex + 1;
+      }
+
+      if (startIndex === -1) return; // 一致する箇所が見つからない場合はスキップ
+
+      // 見つかった範囲を記録
+      usedRanges.push([startIndex, startIndex + oldText.length]);
+
+      // 前のテキストを追加
+      if (startIndex > lastProcessedIndex) {
         elements.push(
-          <span key={`text-${index}`}>
-            {text.slice(lastIndex, change.orig_start)}
+          <span key={`text-${changeIndex}-before`}>
+            {text.slice(lastProcessedIndex, startIndex)}
           </span>
         );
       }
@@ -78,7 +114,7 @@ const GrammarChecker = () => {
       // 修正箇所をハイライト表示
       elements.push(
         <Tooltip
-          key={`original-${index}`}
+          key={`original-${changeIndex}`}
           title={
             <div className="p-4">
               <div className="space-y-2">
@@ -112,19 +148,19 @@ const GrammarChecker = () => {
               borderBottom: '2px solid #e91e63'
             }}
           >
-            {text.slice(change.orig_start, change.orig_end)}
+            {oldText}
           </span>
         </Tooltip>
       );
 
-      lastIndex = change.orig_end;
+      lastProcessedIndex = startIndex + oldText.length;
     });
 
     // 最後の修正箇所以降のテキストを追加
-    if (lastIndex < text.length) {
+    if (lastProcessedIndex < text.length) {
       elements.push(
         <span key="text-end">
-          {text.slice(lastIndex)}
+          {text.slice(lastProcessedIndex)}
         </span>
       );
     }
@@ -143,38 +179,68 @@ const GrammarChecker = () => {
     if (!result || !result.changes || !result.corrected_text) return null;
 
     const text = result.corrected_text;
-    let lastIndex = 0;
-    const elements = [];
+    let elements = [];
+    let lastProcessedIndex = 0;
+    let usedRanges = []; // 既にハイライトした範囲を記録
 
     // 修正箇所は既にソート済み（APIレスポンス処理時）
-    result.changes.forEach((change, index) => {
-      // 修正箇所の前のテキストを追加
-      if (change.corrected_start > lastIndex) {
+    result.changes.forEach((change, changeIndex) => {
+      const newText = change.new;
+      if (!newText) return;
+
+      // 未処理のテキスト内で最初に一致する位置を検索
+      let startIndex = -1;
+      let currentSearchStart = 0;
+
+      while (currentSearchStart < text.length) {
+        const foundIndex = text.indexOf(newText, currentSearchStart);
+        if (foundIndex === -1) break;
+
+        // この範囲が既にハイライト済みかチェック
+        const isOverlapping = usedRanges.some(([start, end]) => 
+          (foundIndex >= start && foundIndex < end) || 
+          (foundIndex + newText.length > start && foundIndex + newText.length <= end)
+        );
+
+        if (!isOverlapping) {
+          startIndex = foundIndex;
+          break;
+        }
+        currentSearchStart = foundIndex + 1;
+      }
+
+      if (startIndex === -1) return; // 一致する箇所が見つからない場合はスキップ
+
+      // 見つかった範囲を記録
+      usedRanges.push([startIndex, startIndex + newText.length]);
+
+      // 前のテキストを追加
+      if (startIndex > lastProcessedIndex) {
         elements.push(
-          <span key={`text-${index}`} className="text-gray-800">
-            {text.slice(lastIndex, change.corrected_start)}
+          <span key={`text-${changeIndex}-before`} className="text-gray-800">
+            {text.slice(lastProcessedIndex, startIndex)}
           </span>
         );
       }
 
-      // 修正箇所を追加（ツールチップなし）
+      // 修正箇所を追加
       elements.push(
         <span 
-          key={`correction-${index}`}
+          key={`correction-${changeIndex}`}
           className="bg-gradient-to-r from-green-100 to-green-50 px-2 py-0.5 rounded-md border border-green-200"
         >
-          {text.slice(change.corrected_start, change.corrected_end)}
+          {newText}
         </span>
       );
 
-      lastIndex = change.corrected_end;
+      lastProcessedIndex = startIndex + newText.length;
     });
 
     // 最後の修正箇所以降のテキストを追加
-    if (lastIndex < text.length) {
+    if (lastProcessedIndex < text.length) {
       elements.push(
         <span key="text-end" className="text-gray-800">
-          {text.slice(lastIndex)}
+          {text.slice(lastProcessedIndex)}
         </span>
       );
     }
@@ -261,43 +327,50 @@ const GrammarChecker = () => {
               <h3 className="text-xl font-semibold mb-4 bg-gradient-to-r from-pink-500 to-pink-300 bg-clip-text text-transparent">
                 修正詳細
               </h3>
-              <div className="space-y-4">
-                {result.changes.map((change, index) => (
-                  <div 
-                    key={index} 
-                    className="bg-white p-6 rounded-lg border-l-4 border-pink-400 shadow-md hover:shadow-lg 
-                             transition-all duration-300 hover:translate-x-1"
-                  >
-                    <div className="flex items-center mb-4">
-                      <span className="bg-gradient-to-r from-pink-500 to-pink-400 text-white text-sm px-3 py-1 rounded-full font-medium">
-                        修正 {index + 1}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className="relative overflow-hidden rounded-lg group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="relative p-4 border border-red-200 rounded-lg">
-                          <span className="font-medium text-red-600">元の表現:</span>
-                          <p className="mt-1 text-gray-800">{change.old}</p>
+              <div className="relative">
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  navigation
+                  pagination={{ clickable: true }}
+                  spaceBetween={30}
+                  slidesPerView={1}
+                  className="correction-swiper"
+                >
+                  {result.changes.map((change, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="bg-white p-6 rounded-lg border-l-4 border-pink-400 shadow-md">
+                        <div className="flex items-center mb-4">
+                          <span className="bg-gradient-to-r from-pink-500 to-pink-400 text-white text-sm px-3 py-1 rounded-full font-medium">
+                            修正 {index + 1} / {result.changes.length}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3">
+                          <div className="relative overflow-hidden rounded-lg group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="relative p-4 border border-red-200 rounded-lg">
+                              <span className="font-medium text-red-600">元の表現:</span>
+                              <p className="mt-1 text-gray-800">{change.old}</p>
+                            </div>
+                          </div>
+                          <div className="relative overflow-hidden rounded-lg group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-green-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="relative p-4 border border-green-200 rounded-lg">
+                              <span className="font-medium text-green-600">修正後:</span>
+                              <p className="mt-1 text-gray-800">{change.new}</p>
+                            </div>
+                          </div>
+                          <div className="relative overflow-hidden rounded-lg group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-pink-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="relative p-4 border border-pink-200 rounded-lg">
+                              <span className="font-medium text-pink-600">修正理由:</span>
+                              <p className="mt-1 text-gray-800">{change.reason}</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="relative overflow-hidden rounded-lg group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-green-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="relative p-4 border border-green-200 rounded-lg">
-                          <span className="font-medium text-green-600">修正後:</span>
-                          <p className="mt-1 text-gray-800">{change.new}</p>
-                        </div>
-                      </div>
-                      <div className="relative overflow-hidden rounded-lg group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-pink-300/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="relative p-4 border border-pink-200 rounded-lg">
-                          <span className="font-medium text-pink-600">修正理由:</span>
-                          <p className="mt-1 text-gray-800">{change.reason}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           )}

@@ -423,4 +423,47 @@
   .markdown-pre {
     padding: 0.8em;
   }
+}
+
+/* Swiper Styles */
+.correction-swiper {
+  padding: 20px 50px 60px !important;
+  position: relative;
+}
+
+.correction-swiper .swiper-button-next,
+.correction-swiper .swiper-button-prev {
+  color: #ec4899;
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.correction-swiper .swiper-button-next:after,
+.correction-swiper .swiper-button-prev:after {
+  font-size: 20px;
+}
+
+.correction-swiper .swiper-pagination {
+  position: absolute;
+  bottom: 20px !important;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+  border-radius: 20px;
+  width: auto !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+
+.correction-swiper .swiper-pagination-bullet {
+  background-color: #ec4899;
+  opacity: 0.5;
+  margin: 0 6px !important;
+}
+
+.correction-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
 } 
+
