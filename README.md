@@ -15,6 +15,7 @@
 - Material-UI
 - Tailwind CSS
 - Google Cloud Platform (App Engine)
+- GitHub Actions (CI/CD)
 
 ## CI/CD
 
@@ -27,4 +28,5 @@ https://kaizenjapanese-461712.an.r.appspot.com
 ## 開発環境
 
 - Node.js 20
-- npm 
+- npm
+- Google Cloud SDK 
