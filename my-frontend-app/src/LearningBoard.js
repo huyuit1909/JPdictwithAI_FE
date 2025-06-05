@@ -285,25 +285,25 @@ const LearningBoard = () => {
         <div className="popup-overlay" onClick={() => setSelectedWord(null)}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h3>{selectedWord.word}</h3>
-            <div className="popup-section">
-              <strong>Meaning:</strong>
+            <div>
+              <div className="popup-section-title">Meaning:</div>
               <ReactMarkdown>{selectedWord.meaning}</ReactMarkdown>
             </div>
             {selectedWord.usage && (
-              <div className="popup-section">
-                <strong>Usage:</strong>
+              <div>
+                <div className="popup-section-title">Usage:</div>
                 <ReactMarkdown>{selectedWord.usage}</ReactMarkdown>
               </div>
             )}
             {selectedWord.examples && (
-              <div className="popup-section">
-                <strong>Examples:</strong>
+              <div>
+                <div className="popup-section-title">Examples:</div>
                 <ReactMarkdown>{selectedWord.examples}</ReactMarkdown>
               </div>
             )}
             {selectedWord.tips && (
-              <div className="popup-section">
-                <strong>Tips:</strong>
+              <div>
+                <div className="popup-section-title">Tips:</div>
                 <ReactMarkdown>{selectedWord.tips}</ReactMarkdown>
               </div>
             )}

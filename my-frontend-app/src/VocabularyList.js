@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from './config';
-import ReactMarkdown from 'react-markdown';
-import './styles/VocabularyList.css';
-import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { CircularProgress, Box } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "./config";
+import ReactMarkdown from "react-markdown";
+import "./styles/VocabularyList.css";
+import { FaCheck, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { CircularProgress, Box } from "@mui/material";
 
 // Add request interceptor for debugging
-axios.interceptors.request.use(request => {
-  console.log('Starting Request:', {
+axios.interceptors.request.use((request) => {
+  console.log("Starting Request:", {
     url: request.url,
     params: request.params,
-    method: request.method
+    method: request.method,
   });
   return request;
 });
 
 // Add response interceptor for debugging
-axios.interceptors.response.use(response => {
-  console.log('Response:', {
+axios.interceptors.response.use((response) => {
+  console.log("Response:", {
     url: response.config.url,
     status: response.status,
-    data: response.data
+    data: response.data,
   });
   return response;
 });
@@ -42,37 +42,37 @@ const VocabularyList = ({ active }) => {
     per_page: ITEMS_PER_PAGE,
     total: 0,
     has_next: false,
-    has_prev: false
+    has_prev: false,
   });
 
   // Fetch danh sách từ vựng với pagination
   const fetchWords = async (page = 1, itemsPerPage = ITEMS_PER_PAGE) => {
     setLoading(true);
     setError(null);
-          try {
-                // URLSearchParamsを使用してクエリパラメータを構築
-        const queryParams = new URLSearchParams({
-            page: page.toString(),
-            per_page: itemsPerPage.toString()
-        });
+    try {
+      // URLSearchParamsを使用してクエリパラメータを構築
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        per_page: itemsPerPage.toString(),
+      });
 
-        const requestUrl = `${API_URL}/list?${queryParams.toString()}`;
-        console.log('Making request to:', requestUrl);
-        
-        const res = await axios.get(requestUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+      const requestUrl = `${API_URL}/list?${queryParams.toString()}`;
+      console.log("Making request to:", requestUrl);
 
-        console.log('API Response:', {
-            url: res.config.url,
-            params: res.config.params,
-            data: res.data
-        });
+      const res = await axios.get(requestUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (!res.data || !res.data.list_word) {
-        throw new Error('Invalid response format from API');
+      console.log("API Response:", {
+        url: res.config.url,
+        params: res.config.params,
+        data: res.data,
+      });
+
+      if (!res.data || !res.data.list_word) {
+        throw new Error("Invalid response format from API");
       }
 
       setWords(res.data.list_word);
@@ -84,36 +84,36 @@ const VocabularyList = ({ active }) => {
           per_page: res.data.pagination.per_page,
           total: res.data.pagination.total,
           has_next: res.data.pagination.has_next,
-          has_prev: res.data.pagination.has_prev
+          has_prev: res.data.pagination.has_prev,
         });
       }
     } catch (err) {
-      setError('Failed to fetch words. Please try again.');
+      setError("Failed to fetch words. Please try again.");
     }
     setLoading(false);
   };
 
   // Xoá từ vựng
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this word?')) return;
+    if (!window.confirm("Are you sure you want to delete this word?")) return;
 
     setLoading(true);
     setError(null);
     setSuccess(null);
     try {
       await axios.delete(`${API_URL}/delete/${id}`, {
-        headers: {'Content-Type': 'application/json'}
+        headers: { "Content-Type": "application/json" },
       });
-      
+
       // Nếu trang hiện tại trống sau khi xoá, load trang trước đó
       if (words.length === 1 && pagination.current_page > 1) {
         fetchWords(pagination.current_page - 1, pagination.per_page);
       } else {
         fetchWords(pagination.current_page, pagination.per_page);
       }
-      setSuccess('Word successfully deleted!');
+      setSuccess("Word successfully deleted!");
     } catch (err) {
-      setError('Failed to delete the word. Please try again.');
+      setError("Failed to delete the word. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -136,28 +136,30 @@ const VocabularyList = ({ active }) => {
       <div className="vocabulary-list-container">
         <h2>Vocabulary List</h2>
         {loading && (
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center',
-            minHeight: '200px',
-            width: '100%'
-          }}>
-            <CircularProgress 
-              sx={{ 
-                color: '#ff4081',
-                animation: 'fadeIn 0.3s',
-                '@keyframes fadeIn': {
-                  '0%': {
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "200px",
+              width: "100%",
+            }}
+          >
+            <CircularProgress
+              sx={{
+                color: "#ff4081",
+                animation: "fadeIn 0.3s",
+                "@keyframes fadeIn": {
+                  "0%": {
                     opacity: 0,
-                    transform: 'scale(0.9)',
+                    transform: "scale(0.9)",
                   },
-                  '100%': {
+                  "100%": {
                     opacity: 1,
-                    transform: 'scale(1)',
+                    transform: "scale(1)",
                   },
                 },
-              }} 
+              }}
             />
           </Box>
         )}
@@ -166,79 +168,80 @@ const VocabularyList = ({ active }) => {
 
         {!loading && (
           <ul>
-            {Array.isArray(words) && words.map((word) => (
-              <li
-                key={word.id}
-                className="vocabulary-item"
-                onClick={() => setSelectedWord(word)}
-              >
-                <div className="word-content">
-                  <strong className="word-title">{word.word}</strong>
-                  <ReactMarkdown>{word.meaning}</ReactMarkdown>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(word.id);
-                  }}
-                  className="mark-complete-button"
-                  title="Mark as Learned"
-                  disabled={loading}
+            {Array.isArray(words) &&
+              words.map((word) => (
+                <li
+                  key={word.id}
+                  className="vocabulary-item"
+                  onClick={() => setSelectedWord(word)}
                 >
-                  <FaCheck className="check-icon" />
-                </button>
-              </li>
-            ))}
+                  <div className="word-content">
+                    <strong className="word-title">{word.word}</strong>
+                    <ReactMarkdown>{word.meaning}</ReactMarkdown>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(word.id);
+                    }}
+                    className="mark-complete-button"
+                    title="Mark as Learned"
+                    disabled={loading}
+                  >
+                    <FaCheck className="check-icon" />
+                  </button>
+                </li>
+              ))}
           </ul>
         )}
         {!loading && words.length === 0 && <p>No words found.</p>}
       </div>
 
       {/* Tách riêng phần pagination */}
-      <div className="pagination-container">
+    <div className="pagination-container">
         <button
-          className="pagination-button"
-          onClick={() => handlePageChange(pagination.current_page - 1)}
-          disabled={!pagination.has_prev || loading}
+            className="pagination-button"
+            onClick={() => handlePageChange(pagination.current_page - 1)}
+            disabled={!pagination.has_prev || loading}
         >
-          <FaChevronLeft /> Previous
+        <FaChevronLeft /> Previous
         </button>
         <span className="pagination-info">
-          Page {pagination.current_page} of {pagination.pages}
+            Page {pagination.current_page} of {pagination.pages}
         </span>
         <button
-          className="pagination-button"
-          onClick={() => handlePageChange(pagination.current_page + 1)}
-          disabled={!pagination.has_next || loading}
+            className="pagination-button"
+            onClick={() => handlePageChange(pagination.current_page + 1)}
+            disabled={!pagination.has_next || loading}
         >
-          Next <FaChevronRight />
+            Next <FaChevronRight />
         </button>
-      </div>
+    </div>
 
       {/* Popup hiển thị chi tiết từ */}
-      {selectedWord && (
+    {selectedWord && (
         <div className="popup-overlay" onClick={() => setSelectedWord(null)}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h3>{selectedWord.word}</h3>
-            <div className="popup-section">
-              <strong>Meaning:</strong>
+            <div>
+              <div className="popup-section-title">Meaning:</div>
               <ReactMarkdown>{selectedWord.meaning}</ReactMarkdown>
             </div>
             {selectedWord.usage && (
-              <div className="popup-section">
-                <strong>Usage:</strong>
+              <div>
+                <div className="popup-section-title">Usage:</div>
                 <ReactMarkdown>{selectedWord.usage}</ReactMarkdown>
               </div>
             )}
             {selectedWord.examples && (
-              <div className="popup-section">
-                <strong>Examples:</strong>
+              <div>
+                <div className="popup-section-title">Examples:</div>
                 <ReactMarkdown>{selectedWord.examples}</ReactMarkdown>
               </div>
             )}
             {selectedWord.tips && (
-              <div className="popup-section">
-                <strong>Tips:</strong>
+              <div>
+                <div className="popup-section-title">Tips:</div>
                 <ReactMarkdown>{selectedWord.tips}</ReactMarkdown>
               </div>
             )}
