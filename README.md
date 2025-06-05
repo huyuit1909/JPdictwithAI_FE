@@ -4,7 +4,7 @@
 
 ## 機能
 
-- 文法チェッカー
+- 文法チェッカー（スライダー形式の修正表示）
 - 文章アシスタント
 - 単語検索
 - 学習ボード
@@ -14,7 +14,7 @@
 - React
 - Material-UI
 - Tailwind CSS
-- Google Cloud Platform
+- Google Cloud Platform (App Engine)
 
 ## CI/CD
 
@@ -22,4 +22,9 @@ GitHub Actionsを使用して、メインブランチへのプッシュ時に自
 
 ## デプロイURL
 
-https://kaizenjapanese-461712.an.r.appspot.com 
+https://kaizenjapanese-461712.an.r.appspot.com
+
+## 開発環境
+
+- Node.js 20
+- npm 
