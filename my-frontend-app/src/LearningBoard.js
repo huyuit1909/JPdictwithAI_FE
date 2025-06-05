@@ -23,10 +23,24 @@ const LearningBoard = () => {
     setError(null);
 
     try {
-      const res = await axios.get(`${API_URL}/list`, {
+      // URLSearchParamsを使用してクエリパラメータを構築
+      const queryParams = new URLSearchParams({
+        page: '1',
+        per_page: '999'  // Lấy số lượng lớn để đảm bảo lấy được tất cả các từ
+      });
+
+      const requestUrl = `${API_URL}/list?${queryParams.toString()}`;
+      console.log('Making request to:', requestUrl);
+
+      const res = await axios.get(requestUrl, {
         headers: {
           'Content-Type': 'application/json',
         },
+      });
+
+      console.log('API Response:', {
+        url: res.config.url,
+        data: res.data
       });
 
       // Lấy đúng mảng từ API
@@ -266,41 +280,33 @@ const LearningBoard = () => {
           ))}
         </div>
       </DragDropContext>
+      {/* Popup hiển thị chi tiết từ */}
       {selectedWord && (
         <div className="popup-overlay" onClick={() => setSelectedWord(null)}>
-          <div className="popup-container" onClick={(e) => e.stopPropagation()}>
-            <div className="popup-header">
-              <h3>{selectedWord.word || 'Chi tiết từ vựng'}</h3>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedWord.word}</h3>
+            <div className="popup-section">
+              <strong>Meaning:</strong>
+              <ReactMarkdown>{selectedWord.meaning}</ReactMarkdown>
             </div>
-            <div className="popup-content">
-              {selectedWord.meaning && (
-                <>
-                  <h4>Meaning</h4>
-                  <ReactMarkdown>{String(selectedWord.meaning)}</ReactMarkdown>
-                </>
-              )}
-              {selectedWord.examples && (
-                <>
-                  <h4>Examples</h4>
-                  <ReactMarkdown>{String(selectedWord.examples)}</ReactMarkdown>
-                </>
-              )}
-              {selectedWord.usage && (
-                <>
-                  <h4>Usage</h4>
-                  <ReactMarkdown>{String(selectedWord.usage)}</ReactMarkdown>
-                </>
-              )}
-              {selectedWord.tips && (
-                <>
-                  <h4>Tips</h4>
-                  <ReactMarkdown>{String(selectedWord.tips)}</ReactMarkdown>
-                </>
-              )}
-            </div>
-            <div className="popup-footer">
-              <button className="close-btn" onClick={() => setSelectedWord(null)}>Close</button>
-            </div>
+            {selectedWord.usage && (
+              <div className="popup-section">
+                <strong>Usage:</strong>
+                <ReactMarkdown>{selectedWord.usage}</ReactMarkdown>
+              </div>
+            )}
+            {selectedWord.examples && (
+              <div className="popup-section">
+                <strong>Examples:</strong>
+                <ReactMarkdown>{selectedWord.examples}</ReactMarkdown>
+              </div>
+            )}
+            {selectedWord.tips && (
+              <div className="popup-section">
+                <strong>Tips:</strong>
+                <ReactMarkdown>{selectedWord.tips}</ReactMarkdown>
+              </div>
+            )}
           </div>
         </div>
       )}

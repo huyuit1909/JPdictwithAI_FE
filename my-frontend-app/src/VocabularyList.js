@@ -1,159 +1,224 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL } from './config';
-import ReactMarkdown from 'react-markdown'; // Import thư viện Markdown
+import ReactMarkdown from 'react-markdown';
 import './styles/VocabularyList.css';
-import { FaCheck } from 'react-icons/fa'; 
+import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
 
+// Add request interceptor for debugging
+axios.interceptors.request.use(request => {
+  console.log('Starting Request:', {
+    url: request.url,
+    params: request.params,
+    method: request.method
+  });
+  return request;
+});
+
+// Add response interceptor for debugging
+axios.interceptors.response.use(response => {
+  console.log('Response:', {
+    url: response.config.url,
+    status: response.status,
+    data: response.data
+  });
+  return response;
+});
+
+const ITEMS_PER_PAGE = 10;
 
 const VocabularyList = ({ active }) => {
-const [words, setWords] = useState([]);
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState(null);
-const [success, setSuccess] = useState(null); // Thêm thông báo xoá thành công
-const [selectedWord, setSelectedWord] = useState(null); // Thêm state cho từ được chọn để mở popup
-// Fetch danh sách từ vựng
-const fetchWords = async () => {
+  const [words, setWords] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [selectedWord, setSelectedWord] = useState(null);
+
+  // Sử dụng snake_case đồng bộ với backend
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    pages: 1,
+    per_page: ITEMS_PER_PAGE,
+    total: 0,
+    has_next: false,
+    has_prev: false
+  });
+
+  // Fetch danh sách từ vựng với pagination
+  const fetchWords = async (page = 1, itemsPerPage = ITEMS_PER_PAGE) => {
     setLoading(true);
     setError(null);
-    try {
-        const res = await axios.get(`${API_URL}/list`, {
+          try {
+                // URLSearchParamsを使用してクエリパラメータを構築
+        const queryParams = new URLSearchParams({
+            page: page.toString(),
+            per_page: itemsPerPage.toString()
+        });
+
+        const requestUrl = `${API_URL}/list?${queryParams.toString()}`;
+        console.log('Making request to:', requestUrl);
+        
+        const res = await axios.get(requestUrl, {
             headers: {
                 'Content-Type': 'application/json',
-            },
+            }
         });
-        console.log(axios.get(`${API_URL}/list`));
-        console.log("API Response:", res.data);
-        // APIレスポンスからlist_wordを取得
-        setWords(res.data.list_word || res.data.words || []);
+
+        console.log('API Response:', {
+            url: res.config.url,
+            params: res.config.params,
+            data: res.data
+        });
+
+        if (!res.data || !res.data.list_word) {
+        throw new Error('Invalid response format from API');
+      }
+
+      setWords(res.data.list_word);
+
+      if (res.data.pagination) {
+        setPagination({
+          current_page: res.data.pagination.current_page,
+          pages: res.data.pagination.pages,
+          per_page: res.data.pagination.per_page,
+          total: res.data.pagination.total,
+          has_next: res.data.pagination.has_next,
+          has_prev: res.data.pagination.has_prev
+        });
+      }
     } catch (err) {
-        console.error('Error fetching words:', err);
-        setError('Failed to fetch words. Please try again.');
+      setError('Failed to fetch words. Please try again.');
     }
     setLoading(false);
-};
+  };
 
-// Xoá từ vựng
-const handleDelete = async (id) => {
+  // Xoá từ vựng
+  const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this word?')) return;
 
     setLoading(true);
     setError(null);
     setSuccess(null);
     try {
-    const token = localStorage.getItem('token');
-    await axios.delete(`${API_URL}/delete/${id}`, {
-        headers: 
-            {'Content-Type': 'application/json'}
-        });
-    console.log(`Word with ID ${id} deleted successfully.`);
-    // Cập nhật danh sách từ vựng sau khi xoá
-    setWords(words.filter((word) => word.id !== id));
-    setSuccess('Word successfully deleted!');
+      await axios.delete(`${API_URL}/delete/${id}`, {
+        headers: {'Content-Type': 'application/json'}
+      });
+      
+      // Nếu trang hiện tại trống sau khi xoá, load trang trước đó
+      if (words.length === 1 && pagination.current_page > 1) {
+        fetchWords(pagination.current_page - 1, pagination.per_page);
+      } else {
+        fetchWords(pagination.current_page, pagination.per_page);
+      }
+      setSuccess('Word successfully deleted!');
     } catch (err) {
-    console.error('Error deleting word:', err);
-    setError('Failed to delete the word. Please try again.');
+      setError('Failed to delete the word. Please try again.');
     } finally {
-    setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-useEffect(() => {
-  fetchWords();
-  // eslint-disable-next-line
-}, []);
+  // Xử lý chuyển trang
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.pages) {
+      fetchWords(newPage, pagination.per_page);
+    }
+  };
 
-return (
-    <div className="vocabulary-list-container">
-    <h2>Vocabulary List</h2>
-    {loading && <p>Loading...</p>}
-    {error && <p className="error">{error}</p>}
-    {success && <p className="success">{success}</p>}
+  useEffect(() => {
+    fetchWords(1, ITEMS_PER_PAGE);
+    // eslint-disable-next-line
+  }, []);
 
-    <ul>
-        {Array.isArray(words) && words.map((word) => (
-        <li
-            key={word.id}
-            className="vocabulary-item"
-            onClick={() => setSelectedWord(word)} // Hiển thị popup khi click vào từ
-        >
-            <div className="word-content">
-            <strong className="word-title">{word.word}</strong>
-            <ReactMarkdown>{word.meaning}</ReactMarkdown>
-            </div>
-            <button
-            onClick={(e) => {
-                e.stopPropagation(); // Ngăn chặn event mở popup khi click xoá
-                handleDelete(word.id);
-            }}
-            className="mark-complete-button"
-            title="Mark as Learned"            
+  return (
+    <>
+      <div className="vocabulary-list-container">
+        <h2>Vocabulary List</h2>
+        {loading && <p>Loading...</p>}
+        {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
+
+        <ul>
+          {Array.isArray(words) && words.map((word) => (
+            <li
+              key={word.id}
+              className="vocabulary-item"
+              onClick={() => setSelectedWord(word)}
             >
-            <FaCheck className="check-icon" />
-            </button>
-        </li>
-        ))}
-    </ul>
-    {!loading && words.length === 0 && <p>No words found.</p>}
+              <div className="word-content">
+                <strong className="word-title">{word.word}</strong>
+                <ReactMarkdown>{word.meaning}</ReactMarkdown>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(word.id);
+                }}
+                className="mark-complete-button"
+                title="Mark as Learned"
+                disabled={loading}
+              >
+                <FaCheck className="check-icon" />
+              </button>
+            </li>
+          ))}
+        </ul>
+        {!loading && words.length === 0 && <p>No words found.</p>}
+      </div>
 
-    {/* Popup hiển thị chi tiết từ */}
-    {selectedWord && (
-<div className="popup-overlay" onClick={() => setSelectedWord(null)}>
-    <div className="popup-container" onClick={(e) => e.stopPropagation()}>
-    {/* Header */}
-    <div className="popup-header">
-        {selectedWord.word || 'Chi tiết từ vựng'}
-    </div>
-
-    {/* Nội dung popup */}
-    <div className="popup-content">
-        {/* Meaning */}
-        {selectedWord.meaning && (
-        <>
-            <h3>Meaning</h3>
-            <ReactMarkdown>{String(selectedWord.meaning)}</ReactMarkdown>
-        </>
-        )}
-
-        {/* Examples */}
-        {selectedWord.examples && (
-        <>
-            <h3>Examples</h3>
-            <ReactMarkdown>{String(selectedWord.examples)}</ReactMarkdown>
-        </>
-        )}
-
-        {/* Usage */}
-        {selectedWord.usage && (
-        <>
-            <h3>Usage</h3>
-            <ReactMarkdown>{String(selectedWord.usage)}</ReactMarkdown>
-        </>
-        )}
-
-        {/* Tips */}
-        {selectedWord.tips && (
-        <>
-            <h3>Tips</h3>
-            <ReactMarkdown>{String(selectedWord.tips)}</ReactMarkdown>
-        </>
-        )}
-    </div>
-
-    {/* Footer với nút Close */}
-    <div className="popup-footer">
+      {/* Tách riêng phần pagination */}
+      <div className="pagination-container">
         <button
-        className="popup-close-btn"
-        onClick={() => setSelectedWord(null)}
+          className="pagination-button"
+          onClick={() => handlePageChange(pagination.current_page - 1)}
+          disabled={!pagination.has_prev || loading}
         >
-        Close
+          <FaChevronLeft /> Previous
         </button>
-    </div>
-    </div>
-</div>
-)}
-    </div>
-);
+        <span className="pagination-info">
+          Page {pagination.current_page} of {pagination.pages}
+        </span>
+        <button
+          className="pagination-button"
+          onClick={() => handlePageChange(pagination.current_page + 1)}
+          disabled={!pagination.has_next || loading}
+        >
+          Next <FaChevronRight />
+        </button>
+      </div>
+
+      {/* Popup hiển thị chi tiết từ */}
+      {selectedWord && (
+        <div className="popup-overlay" onClick={() => setSelectedWord(null)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedWord.word}</h3>
+            <div className="popup-section">
+              <strong>Meaning:</strong>
+              <ReactMarkdown>{selectedWord.meaning}</ReactMarkdown>
+            </div>
+            {selectedWord.usage && (
+              <div className="popup-section">
+                <strong>Usage:</strong>
+                <ReactMarkdown>{selectedWord.usage}</ReactMarkdown>
+              </div>
+            )}
+            {selectedWord.examples && (
+              <div className="popup-section">
+                <strong>Examples:</strong>
+                <ReactMarkdown>{selectedWord.examples}</ReactMarkdown>
+              </div>
+            )}
+            {selectedWord.tips && (
+              <div className="popup-section">
+                <strong>Tips:</strong>
+                <ReactMarkdown>{selectedWord.tips}</ReactMarkdown>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default VocabularyList;
