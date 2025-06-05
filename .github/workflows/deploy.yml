@@ -38,6 +38,7 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
           create_credentials_file: true
+          export_environment_variables: true
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -53,6 +54,7 @@ jobs:
           runtime: nodejs20
           env: standard
           instance_class: F1
+          service: default
           automatic_scaling:
             target_cpu_utilization: 0.65
             min_instances: 1
@@ -65,9 +67,13 @@ jobs:
             - url: /(.*\..+)$
               static_files: my-frontend-app/build/\1
               upload: my-frontend-app/build/(.*\..+)$
+              secure: always
             - url: /.*
               static_files: my-frontend-app/build/index.html
               upload: my-frontend-app/build/index.html
+              secure: always
           EOF
           
-          gcloud app deploy app.yaml --quiet --project=${{ secrets.GCP_PROJECT_ID }} 
+          gcloud auth configure-docker
+          gcloud config set app/cloud_build_timeout 1800
+          gcloud app deploy app.yaml --quiet --project=${{ secrets.GCP_PROJECT_ID }} --impersonate-service-account=${{ secrets.GCP_SA_EMAIL }} 
