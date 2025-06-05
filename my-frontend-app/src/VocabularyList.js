@@ -3,7 +3,8 @@ import axios from 'axios';
 import { API_URL } from './config';
 import ReactMarkdown from 'react-markdown';
 import './styles/VocabularyList.css';
-import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
+import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { CircularProgress, Box } from '@mui/material';
 
 // Add request interceptor for debugging
 axios.interceptors.request.use(request => {
@@ -134,35 +135,62 @@ const VocabularyList = ({ active }) => {
     <>
       <div className="vocabulary-list-container">
         <h2>Vocabulary List</h2>
-        {loading && <p>Loading...</p>}
+        {loading && (
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            minHeight: '200px',
+            width: '100%'
+          }}>
+            <CircularProgress 
+              sx={{ 
+                color: '#ff4081',
+                animation: 'fadeIn 0.3s',
+                '@keyframes fadeIn': {
+                  '0%': {
+                    opacity: 0,
+                    transform: 'scale(0.9)',
+                  },
+                  '100%': {
+                    opacity: 1,
+                    transform: 'scale(1)',
+                  },
+                },
+              }} 
+            />
+          </Box>
+        )}
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
 
-        <ul>
-          {Array.isArray(words) && words.map((word) => (
-            <li
-              key={word.id}
-              className="vocabulary-item"
-              onClick={() => setSelectedWord(word)}
-            >
-              <div className="word-content">
-                <strong className="word-title">{word.word}</strong>
-                <ReactMarkdown>{word.meaning}</ReactMarkdown>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(word.id);
-                }}
-                className="mark-complete-button"
-                title="Mark as Learned"
-                disabled={loading}
+        {!loading && (
+          <ul>
+            {Array.isArray(words) && words.map((word) => (
+              <li
+                key={word.id}
+                className="vocabulary-item"
+                onClick={() => setSelectedWord(word)}
               >
-                <FaCheck className="check-icon" />
-              </button>
-            </li>
-          ))}
-        </ul>
+                <div className="word-content">
+                  <strong className="word-title">{word.word}</strong>
+                  <ReactMarkdown>{word.meaning}</ReactMarkdown>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(word.id);
+                  }}
+                  className="mark-complete-button"
+                  title="Mark as Learned"
+                  disabled={loading}
+                >
+                  <FaCheck className="check-icon" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
         {!loading && words.length === 0 && <p>No words found.</p>}
       </div>
 

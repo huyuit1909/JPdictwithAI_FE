@@ -7,7 +7,8 @@ import {
   Box, 
   IconButton,
   Typography,
-  Button
+  Button,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -21,20 +22,52 @@ const AssistantModal = ({ isOpen, onClose }) => {
   const [generatedText, setGeneratedText] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [inputValue, setInputValue] = useState('');
+
+  const loadMoreWords = async (pageNum) => {
+    if (!hasMore || loading) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api-dot-kaizenjapanese-461712.an.r.appspot.com/list?page=${pageNum}&per_page=20`
+      );
+      const data = await response.json();
+      
+      if (data.list_word && data.list_word.length > 0) {
+        setSavedWords(prev => [...prev, ...data.list_word]);
+        setHasMore(data.list_word.length === 20);
+        setPage(pageNum + 1);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      setError('単語の取得に失敗しました。');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
-      fetchSavedWords();
+      setSavedWords([]);
+      setPage(1);
+      setHasMore(true);
+      loadMoreWords(1);
     }
   }, [isOpen]);
 
-  const fetchSavedWords = async () => {
-    try {
-      const response = await fetch('https://api-dot-kaizenjapanese-461712.an.r.appspot.com/list');
-      const data = await response.json();
-      setSavedWords(data.list_word || []);
-    } catch (error) {
-      setError('単語の取得に失敗しました。');
+  const handleScroll = (event) => {
+    const listbox = event.target;
+    if (
+      listbox.scrollTop + listbox.clientHeight >= listbox.scrollHeight - 50 &&
+      hasMore &&
+      !loading
+    ) {
+      loadMoreWords(page);
     }
   };
 
@@ -129,11 +162,42 @@ const AssistantModal = ({ isOpen, onClose }) => {
                   getOptionLabel={(option) => option.word}
                   value={selectedWords}
                   onChange={handleWordSelect}
+                  inputValue={inputValue}
+                  onInputChange={(event, newInputValue) => {
+                    setInputValue(newInputValue);
+                  }}
+                  disableCloseOnSelect
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
-                      placeholder="単語を選択..."
+                      placeholder={loading ? "読み込み中..." : "単語を選択..."}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loading && (
+                              <CircularProgress
+                                color="secondary"
+                                size={20}
+                                sx={{
+                                  marginRight: 1,
+                                  animation: 'fadeIn 0.3s',
+                                  '@keyframes fadeIn': {
+                                    '0%': {
+                                      opacity: 0,
+                                    },
+                                    '100%': {
+                                      opacity: 1,
+                                    },
+                                  },
+                                }}
+                              />
+                            )}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
                       sx={{
                         '& .MuiOutlinedInput-root': {
                           borderRadius: '15px',
@@ -154,30 +218,84 @@ const AssistantModal = ({ isOpen, onClose }) => {
                     />
                   )}
                   renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                      <Chip
-                        key={option.id}
-                        label={option.word}
-                        {...getTagProps({ index })}
-                        sx={{
-                          backgroundColor: '#ff4081',
-                          color: 'white',
-                          fontSize: '1rem',
-                          padding: '20px 10px',
-                          borderRadius: '12px',
-                          '&:hover': {
-                            backgroundColor: '#f50057',
-                          },
-                          '& .MuiChip-deleteIcon': {
+                    value.map((option, index) => {
+                      const { key, ...chipProps } = getTagProps({ index });
+                      return (
+                        <Chip
+                          key={`${option.id}-${option.word}-${index}`}
+                          {...chipProps}
+                          label={option.word}
+                          sx={{
+                            backgroundColor: '#ff4081',
                             color: 'white',
+                            fontSize: '1rem',
+                            padding: '20px 10px',
+                            borderRadius: '12px',
                             '&:hover': {
-                              color: 'rgba(255, 255, 255, 0.7)',
+                              backgroundColor: '#f50057',
                             },
-                          },
-                        }}
-                      />
-                    ))
+                            '& .MuiChip-deleteIcon': {
+                              color: 'white',
+                              '&:hover': {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                              },
+                            },
+                          }}
+                        />
+                      );
+                    })
                   }
+                  renderOption={(props, option, { selected }) => {
+                    const { key, ...other } = props;
+                    return (
+                      <li
+                        key={`${option.id}-${option.word}`}
+                        {...other}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: '1rem',
+                            fontWeight: selected ? 600 : 400,
+                            color: selected ? '#ff4081' : 'inherit',
+                            p: '10px 15px',
+                            borderBottom: '1px solid #eee',
+                            width: '100%',
+                            '&:hover': {
+                              bgcolor: '#f5f5f5',
+                            },
+                            ...(selected && {
+                              bgcolor: '#fff3f7',
+                            }),
+                          }}
+                        >
+                          {option.word}
+                        </Typography>
+                      </li>
+                    );
+                  }}
+                  ListboxProps={{
+                    onScroll: handleScroll,
+                    sx: {
+                      maxHeight: '300px',
+                      overflowY: 'auto',
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: '#ff4081 #f1f1f1',
+                      '& ::-webkit-scrollbar': {
+                        width: '8px',
+                      },
+                      '& ::-webkit-scrollbar-track': {
+                        backgroundColor: '#f1f1f1',
+                        borderRadius: '4px',
+                      },
+                      '& ::-webkit-scrollbar-thumb': {
+                        backgroundColor: '#ff4081',
+                        borderRadius: '4px',
+                        '&:hover': {
+                          backgroundColor: '#f50057',
+                        },
+                      },
+                    },
+                  }}
                 />
               </Box>
             </div>
