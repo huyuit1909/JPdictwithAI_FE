@@ -48,6 +48,13 @@ jobs:
           cd ..  # ルートディレクトリに移動
           echo "runtime: nodejs18" > app.yaml
           echo "env: standard" >> app.yaml
+          echo "instance_class: F1" >> app.yaml
+          echo "automatic_scaling:" >> app.yaml
+          echo "  target_cpu_utilization: 0.65" >> app.yaml
+          echo "  min_instances: 1" >> app.yaml
+          echo "  max_instances: 10" >> app.yaml
+          echo "  min_idle_instances: 1" >> app.yaml
+          echo "  max_idle_instances: 2" >> app.yaml
           echo "handlers:" >> app.yaml
           echo "  - url: /(.*\..+)$" >> app.yaml
           echo "    static_files: my-frontend-app/build/\\1" >> app.yaml
