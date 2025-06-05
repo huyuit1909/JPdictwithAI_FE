@@ -37,6 +37,7 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          service_account: '${{ secrets.GCP_SA_EMAIL }}'  # サービスアカウントのメールアドレスを指定
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
@@ -49,6 +50,7 @@ jobs:
           echo "runtime: nodejs20" > app.yaml
           echo "env: standard" >> app.yaml
           echo "instance_class: F1" >> app.yaml
+          echo "service_account: ${{ secrets.GCP_SA_EMAIL }}" >> app.yaml  # サービスアカウントを指定
           echo "automatic_scaling:" >> app.yaml
           echo "  target_cpu_utilization: 0.65" >> app.yaml
           echo "  min_instances: 1" >> app.yaml
