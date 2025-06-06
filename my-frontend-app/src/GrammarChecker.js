@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Tooltip } from "@mui/material";
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import "./styles/AssistantModal.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -11,6 +12,7 @@ const GrammarChecker = () => {
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [audioLoading, setAudioLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +63,45 @@ const GrammarChecker = () => {
     setResult(null);
     setInputText('');
   };
+
+  const playTextToSpeech = async (text) => {
+    try {
+      setAudioLoading(true);
+      const response = await fetch(
+        'https://api-dot-kaizenjapanese-461712.an.r.appspot.com/tts/synthesize',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        }
+      );
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      await audio.play();
+    } catch (error) {
+      console.error('Error playing audio:', error);
+    } finally {
+      setAudioLoading(false);
+    }
+  };
+
+  const renderSpeakerIcon = (text, size = 'small') => (
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        playTextToSpeech(text);
+      }}
+      disabled={audioLoading}
+      className={`p-1 rounded-full hover:bg-gray-100 transition-colors duration-200 ${size === 'large' ? 'ml-4' : 'ml-2'}`}
+    >
+      <VolumeUpIcon className={`${size === 'large' ? 'h-8 w-8' : 'h-5 w-5'} ${audioLoading ? 'text-gray-400' : 'text-pink-500'}`} />
+    </button>
+  );
 
   const renderOriginalText = () => {
     if (!result || !result.changes || !result.original_text) return null;
@@ -248,9 +289,11 @@ const GrammarChecker = () => {
     return (
       <div className="space-y-6">
         <div className="p-4 border border-pink-100 rounded-lg bg-white">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">修正後のテキスト:</h4>
           <div className="text-lg leading-relaxed">
             {elements}
+          </div>
+          <div className="flex justify-end mt-2">
+            {renderSpeakerIcon(result.corrected_text, 'large')}
           </div>
         </div>
       </div>
