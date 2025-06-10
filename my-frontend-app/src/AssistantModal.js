@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { API_URL } from './config';
 import './styles/AssistantModal.css';
 
 const AssistantModal = ({ isOpen, onClose }) => {
@@ -33,7 +34,7 @@ const AssistantModal = ({ isOpen, onClose }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `https://api-dot-kaizenjapanese-461712.an.r.appspot.com/list?page=${pageNum}&per_page=20`
+        `${API_URL}/list?page=${pageNum}&per_page=20`
       );
       const data = await response.json();
       
@@ -90,7 +91,7 @@ const AssistantModal = ({ isOpen, onClose }) => {
     setError(null);
     
     try {
-      const response = await fetch('https://api-dot-kaizenjapanese-461712.an.r.appspot.com/assistant', {
+      const response = await fetch(`${API_URL}/assistant`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

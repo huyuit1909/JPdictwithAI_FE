@@ -76,7 +76,11 @@ const TranslateText = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: inputText, source, target }),
+        body: JSON.stringify({
+          text: inputText,
+          source_lang: source,
+          target_lang: target,
+        }),
       });
       const data = await response.json();
       if (!response.ok) {

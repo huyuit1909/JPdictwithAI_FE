@@ -4,6 +4,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import "./styles/AssistantModal.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
+import { API_URL } from "./config";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -20,7 +21,7 @@ const GrammarChecker = () => {
 
     try {
       const response = await fetch(
-        'https://api-dot-kaizenjapanese-461712.an.r.appspot.com/assistant/grammar',
+        `${API_URL}/assistant/grammar`,
         {
           method: 'POST',
           headers: {
@@ -68,7 +69,7 @@ const GrammarChecker = () => {
     try {
       setAudioLoading(true);
       const response = await fetch(
-        'https://api-dot-kaizenjapanese-461712.an.r.appspot.com/tts/synthesize',
+        `${API_URL}/tts/synthesize`,
         {
           method: 'POST',
           headers: {

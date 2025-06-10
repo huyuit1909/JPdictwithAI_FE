@@ -37,7 +37,7 @@ handlers:
     redirect_http_response_code: 301
 
 env_variables:
-  REACT_APP_API_URL: "https://api-dot-kaizenjapanese-461712.an.r.appspot.com"
+  REACT_APP_API_URL: "http://jpdict-api.azurewebsites.net"
 
 automatic_scaling:
   target_cpu_utilization: 0.65
