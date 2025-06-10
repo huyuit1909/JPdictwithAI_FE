@@ -50,7 +50,6 @@ const VocabularyList = ({ active }) => {
     setLoading(true);
     setError(null);
     try {
-      // URLSearchParamsを使用してクエリパラメータを構築
       const queryParams = new URLSearchParams({
         page: page.toString(),
         per_page: itemsPerPage.toString(),
@@ -74,6 +73,9 @@ const VocabularyList = ({ active }) => {
       if (!res.data || !res.data.list_word) {
         throw new Error("Invalid response format from API");
       }
+
+      // Log để kiểm tra dữ liệu từ API
+      console.log("Words from API:", res.data.list_word);
 
       setWords(res.data.list_word);
 
@@ -222,26 +224,52 @@ const VocabularyList = ({ active }) => {
     {selectedWord && (
         <div className="popup-overlay" onClick={() => setSelectedWord(null)}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            {/* Log để kiểm tra dữ liệu của từ được chọn */}
+            {console.log("Selected word data:", selectedWord)}
             <h3>{selectedWord.word}</h3>
             <div>
-              <div className="popup-section-title">Meaning:</div>
+              <div className="popup-section-title">意味:</div>
               <ReactMarkdown>{selectedWord.meaning}</ReactMarkdown>
             </div>
+            {selectedWord.kanji && (
+              <div>
+                <div className="popup-section-title">漢字:</div>
+                <ReactMarkdown>{selectedWord.kanji}</ReactMarkdown>
+              </div>
+            )}
             {selectedWord.usage && (
               <div>
-                <div className="popup-section-title">Usage:</div>
+                <div className="popup-section-title">使い方:</div>
                 <ReactMarkdown>{selectedWord.usage}</ReactMarkdown>
               </div>
             )}
             {selectedWord.examples && (
               <div>
-                <div className="popup-section-title">Examples:</div>
-                <ReactMarkdown>{selectedWord.examples}</ReactMarkdown>
+                <div className="popup-section-title">例文:</div>
+                {selectedWord.examples.split("\\n").map((example, index) => (
+                  example.trim() && (
+                    <div key={index} className="example-item">
+                      <ReactMarkdown>{example}</ReactMarkdown>
+                    </div>
+                  )
+                ))}
+              </div>
+            )}
+            {!selectedWord.examples && selectedWord.example && (
+              <div>
+                <div className="popup-section-title">例文:</div>
+                {selectedWord.example.split("\\n").map((example, index) => (
+                  example.trim() && (
+                    <div key={index} className="example-item">
+                      <ReactMarkdown>{example}</ReactMarkdown>
+                    </div>
+                  )
+                ))}
               </div>
             )}
             {selectedWord.tips && (
               <div>
-                <div className="popup-section-title">Tips:</div>
+                <div className="popup-section-title">学習のコツ:</div>
                 <ReactMarkdown>{selectedWord.tips}</ReactMarkdown>
               </div>
             )}

@@ -141,6 +141,12 @@ ul {
   background-color: #fff5f8;
   border-radius: 8px;
   border: 1px solid #ffd6e7;
+  transition: all 0.3s ease;
+}
+
+.popup-content > div:hover {
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.1);
+  transform: translateY(-2px);
 }
 
 .popup-content > div:last-child {
@@ -174,13 +180,14 @@ ul {
 }
 
 .popup-section-title {
-  border: 2px solid #ff4081;
   display: inline-block;
-  padding: 5px 15px;
-  color: #ff4081;
-  font-weight: bold;
+  background-color: #e91e63;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
   margin-bottom: 10px;
-  background-color: white;
+  font-weight: bold;
 }
 
 /* Pagination styles */
@@ -249,5 +256,33 @@ ul {
     font-size: 0.9rem;
     min-width: 100px;
   }
+
+  .popup-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .example-item {
+    padding: 10px;
+  }
+}
+
+.example-item {
+  background-color: #fff5f8;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border: 1px solid #ffd6e7;
+  transition: all 0.3s ease;
+}
+
+.example-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.15);
+}
+
+.example-item p {
+  margin: 0;
+  line-height: 1.6;
 }
 

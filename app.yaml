@@ -1,43 +1,50 @@
 runtime: nodejs20
 
 handlers:
-  # Serve all static files with long-term caching
-  - url: /static
-    static_dir: build/static
+  # Serve static files with url pattern
+  - url: /static/(.*)
+    static_files: my-frontend-app/build/static/\1
+    upload: my-frontend-app/build/static/(.*)
     secure: always
     redirect_http_response_code: 301
-    expiration: 1d
 
-  # Handle the favicon
+  # Serve the favicon
   - url: /favicon.ico
-    static_files: build/favicon.ico
-    upload: build/favicon.ico
+    static_files: my-frontend-app/build/favicon.ico
+    upload: my-frontend-app/build/favicon.ico
     secure: always
     redirect_http_response_code: 301
 
-  # Handle the manifest
+  # Serve the manifest
   - url: /manifest.json
-    static_files: build/manifest.json
-    upload: build/manifest.json
+    static_files: my-frontend-app/build/manifest.json
+    upload: my-frontend-app/build/manifest.json
     secure: always
     redirect_http_response_code: 301
 
-  # Handle other static assets
-  - url: /(.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))$
-    static_files: build/\1
-    upload: build/(.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))$
+  # Serve other static assets
+  - url: /(.*\.(json|js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))$
+    static_files: my-frontend-app/build/\1
+    upload: my-frontend-app/build/(.*\.(json|js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))$
     secure: always
     redirect_http_response_code: 301
 
-  # Catch-all: serve index.html for all other requests (SPA routing)
+  # Serve sitemap and robots.txt
+  - url: /(sitemap.xml|robots.txt)
+    static_files: my-frontend-app/build/\1
+    upload: my-frontend-app/build/(sitemap.xml|robots.txt)
+    secure: always
+    redirect_http_response_code: 301
+
+  # Catch all handler to index.html
   - url: /.*
-    static_files: build/index.html
-    upload: build/index.html
+    static_files: my-frontend-app/build/index.html
+    upload: my-frontend-app/build/index.html
     secure: always
     redirect_http_response_code: 301
 
 env_variables:
-  REACT_APP_API_URL: "https://api-dot-kaizenjapanese-461712.an.r.appspot.com"
+  REACT_APP_API_URL: "https://jpdict-api.azurewebsites.net"
 
 automatic_scaling:
   target_cpu_utilization: 0.65

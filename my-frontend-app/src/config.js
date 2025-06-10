@@ -1,6 +1,5 @@
 // frontend/src/config.js
-export const API_URL = 'http://jpdict-api.azurewebsites.net';
-export const OLD_API_URL = 'https://api-dot-kaizenjapanese-461712.an.r.appspot.com';
+export const API_URL = 'https://jpdict-api.azurewebsites.net';
 
 // API Endpoints
 export const API_ENDPOINTS = {

@@ -242,3 +242,34 @@
 .section-title span {
   font-size: 1.1em !important;
 }
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .sidebar {
+    background: linear-gradient(to left, #ffffff, #fceff9);
+    box-shadow: none;
+  }
+
+  .sidebar.collapsed {
+    background: transparent;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    width: 4px;
+  }
+
+  .sidebar.collapsed .icon {
+    display: none;
+  }
+
+  .sidebar.collapsed .section-title {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .sidebar.collapsed .section-title span {
+    display: none;
+  }
+
+  .sidebar.collapsed .section-title .arrow-icon {
+    display: none;
+  }
+}
